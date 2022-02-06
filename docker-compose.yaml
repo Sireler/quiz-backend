@@ -1,0 +1,23 @@
+services:
+  postgres:
+    container_name: quiz_postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: quiz
+      POSTGRES_PASSWORD: secret
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - quiz-application
+    restart: "no"
+
+networks:
+  quiz-application:
+    name: quiz-application
+    driver: bridge
+
+volumes:
+  postgres:
