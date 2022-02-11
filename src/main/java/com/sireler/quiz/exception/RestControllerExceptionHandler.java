@@ -1,6 +1,7 @@
 package com.sireler.quiz.exception;
 
 import com.sireler.quiz.dto.ApiResponse;
+import com.sireler.quiz.security.JwtAuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +17,15 @@ public class RestControllerExceptionHandler {
         apiResponse.setMessage(e.getMessage());
 
         return new ResponseEntity<>(apiResponse, e.getHttpStatus());
+    }
+
+    @ExceptionHandler(JwtAuthenticationException.class)
+    public ResponseEntity<ApiResponse> resolveException(JwtAuthenticationException e) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setCode(HttpStatus.UNAUTHORIZED.value());
+        apiResponse.setMessage(e.getMessage());
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(RuntimeException.class)

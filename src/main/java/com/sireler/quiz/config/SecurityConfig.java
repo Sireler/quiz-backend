@@ -1,5 +1,6 @@
 package com.sireler.quiz.config;
 
+import com.sireler.quiz.controller.filter.FilterChainExceptionHandler;
 import com.sireler.quiz.security.JwtConfigurer;
 import com.sireler.quiz.security.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -17,8 +19,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+    private final FilterChainExceptionHandler filterChainExceptionHandler;
+
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider, FilterChainExceptionHandler filterChainExceptionHandler) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.filterChainExceptionHandler = filterChainExceptionHandler;
     }
 
     @Bean
@@ -30,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
