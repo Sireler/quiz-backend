@@ -14,6 +14,18 @@ services:
       - quiz-application
     restart: "no"
 
+  redis:
+    container_name: quiz_redis
+    image: redis
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - quiz-application
+    restart: "no"
+
 networks:
   quiz-application:
     name: quiz-application
@@ -21,3 +33,4 @@ networks:
 
 volumes:
   postgres:
+  redis:
