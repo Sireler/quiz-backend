@@ -1,6 +1,7 @@
-package com.sireler.quiz.exception;
+package com.sireler.quiz.controller.advice;
 
 import com.sireler.quiz.dto.ApiResponse;
+import com.sireler.quiz.exception.ApiException;
 import com.sireler.quiz.security.JwtAuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
