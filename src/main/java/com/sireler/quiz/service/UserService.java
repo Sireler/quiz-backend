@@ -7,4 +7,6 @@ public interface UserService {
     User findByUsername(String username);
 
     User register(User user);
+
+    String getToken(String username, String password);
 }
