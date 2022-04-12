@@ -1,5 +1,6 @@
 package com.sireler.quiz.controller;
 
+import com.sireler.quiz.dto.ApiResponse;
 import com.sireler.quiz.dto.LoginRequestDto;
 import com.sireler.quiz.dto.LoginResponseDto;
 import com.sireler.quiz.dto.RegisterRequestDto;
@@ -48,10 +49,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<User> register(@Valid @RequestBody RegisterRequestDto registerRequestDto) {
+    public ResponseEntity<ApiResponse> register(@Valid @RequestBody RegisterRequestDto registerRequestDto) {
         User user = modelMapper.map(registerRequestDto, User.class);
         userService.register(user);
 
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK.value(), "Successfully registered"));
     }
 }
