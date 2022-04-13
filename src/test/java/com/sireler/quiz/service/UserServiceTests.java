@@ -16,7 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class UserServiceTests {
 
     private UserService userService;
 

@@ -1,11 +1,11 @@
 package com.sireler.quiz.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sireler.quiz.dto.AnswerDto;
-import com.sireler.quiz.model.Answer;
+import com.sireler.quiz.dto.QuestionDto;
 import com.sireler.quiz.model.Question;
-import com.sireler.quiz.repository.AnswerRepository;
+import com.sireler.quiz.model.Topic;
 import com.sireler.quiz.repository.QuestionRepository;
+import com.sireler.quiz.repository.TopicRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,114 +24,108 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AnswerControllerTest {
+class QuestionControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private QuestionRepository questionRepository;
+    private TopicRepository topicRepository;
 
     @Autowired
-    private AnswerRepository answerRepository;
+    private QuestionRepository questionRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
     @WithMockUser
-    void whenGivenQuestionId_thenShouldReturnQuestionAnswers() throws Exception {
-        Question question = new Question();
-        question.setBody("question 1");
-        questionRepository.save(question);
+    void whenGivenTopicId_thenShouldReturnTopicQuestions() throws Exception {
+        Topic topic = new Topic();
+        topic.setName("Topic");
+        topicRepository.save(topic);
 
-        Answer answer1 = new Answer();
-        answer1.setBody("answer 1");
-        answer1.setCorrect(true);
-        answer1.setQuestion(question);
-        answerRepository.save(answer1);
+        Question question1 = new Question();
+        question1.setBody("question 1");
+        question1.setTopic(topic);
+        questionRepository.save(question1);
 
-        Answer answer2 = new Answer();
-        answer2.setBody("answer 2");
-        answer2.setCorrect(false);
-        answer2.setQuestion(question);
-        answerRepository.save(answer2);
+        Question question2 = new Question();
+        question2.setBody("question 2");
+        question2.setTopic(topic);
+        questionRepository.save(question2);
 
-        mockMvc.perform(get("/api/v1/questions/" + question.getId() + "/answers"))
+        mockMvc.perform(get("/api/v1/topics/" + topic.getId() + "/questions"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[*].body", containsInAnyOrder("answer 1", "answer 2")));
+                .andExpect(jsonPath("$[*].body", containsInAnyOrder("question 1", "question 2")));
     }
 
     @Test
     @WithMockUser
     void whenGivenValidQuestion_thenShouldSaveQuestion() throws Exception {
-        Question question = new Question();
-        question.setBody("question 1");
-        questionRepository.save(question);
+        Topic topic = new Topic();
+        topic.setName("Topic");
+        topicRepository.save(topic);
 
-        AnswerDto answerDto = new AnswerDto();
-        answerDto.setBody("answer 1");
-        answerDto.setCorrect(true);
+        QuestionDto questionDto = new QuestionDto();
+        questionDto.setBody("question 1");
 
         mockMvc
                 .perform(
-                        post("/api/v1/questions/" + question.getId() + "/answers")
-                                .content(objectMapper.writeValueAsString(answerDto))
+                        post("/api/v1/topics/" + topic.getId() + "/questions")
+                                .content(objectMapper.writeValueAsString(questionDto))
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.body", is("answer 1")));
+                .andExpect(jsonPath("$.body", is("question 1")));
     }
 
     @Test
     @WithMockUser
     void whenGivenValidQuestionAndId_thenShouldUpdateQuestion() throws Exception {
+        Topic topic = new Topic();
+        topic.setName("Topic");
+        topicRepository.save(topic);
+
         Question question = new Question();
         question.setBody("question 1");
+        question.setTopic(topic);
         questionRepository.save(question);
 
-        Answer answer = new Answer();
-        answer.setBody("answer 1");
-        answer.setCorrect(true);
-        answer.setQuestion(question);
-        answerRepository.save(answer);
-
-        AnswerDto answerDto = new AnswerDto();
-        answerDto.setBody("New answer body");
-        answerDto.setCorrect(true);
+        QuestionDto questionDto = new QuestionDto();
+        questionDto.setBody("New question body");
 
         mockMvc
                 .perform(
-                        put("/api/v1/questions/" + question.getId() + "/answers/" + answer.getId())
-                                .content(objectMapper.writeValueAsString(answerDto))
+                        put("/api/v1/topics/" + topic.getId() + "/questions/" + question.getId())
+                                .content(objectMapper.writeValueAsString(questionDto))
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.body", is("New answer body")));
+                .andExpect(jsonPath("$.body", is("New question body")));
     }
 
     @Test
     @WithMockUser
     void whenGivenQuestionId_thenShouldDeleteQuestion() throws Exception {
+        Topic topic = new Topic();
+        topic.setName("Topic");
+        topicRepository.save(topic);
+
         Question question = new Question();
         question.setBody("question 1");
+        question.setTopic(topic);
         questionRepository.save(question);
-
-        Answer answer = new Answer();
-        answer.setBody("answer 1");
-        answer.setCorrect(true);
-        answer.setQuestion(question);
-        answerRepository.save(answer);
 
         mockMvc
                 .perform(
-                        delete("/api/v1/questions/" + question.getId() + "/answers/" + answer.getId())
+                        delete("/api/v1/topics/" + topic.getId() + "/questions/" + question.getId())
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )

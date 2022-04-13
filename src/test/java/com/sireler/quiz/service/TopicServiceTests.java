@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-class TopicServiceTest {
+class TopicServiceTests {
 
     private TopicService topicService;
 

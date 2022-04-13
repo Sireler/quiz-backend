@@ -16,7 +16,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import javax.servlet.http.HttpServletRequest;
 
 @ExtendWith(MockitoExtension.class)
-class JwtTokenProviderTest {
+class JwtTokenProviderTests {
     
     @Mock
     private UserDetailsService userDetailsService;

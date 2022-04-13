@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
-class JwtUserDetailsServiceTest {
+class JwtUserDetailsServiceTests {
 
     @Mock
     private UserRepository userRepository;
