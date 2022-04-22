@@ -1,7 +1,7 @@
 package com.sireler.quiz.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sireler.quiz.dto.TopicDto;
+import com.sireler.quiz.dto.TopicRequestDto;
 import com.sireler.quiz.model.Topic;
 import com.sireler.quiz.model.User;
 import com.sireler.quiz.repository.TopicRepository;
@@ -84,13 +84,13 @@ class TopicControllerTests {
     @WithUserDetails("testUsername")
     void whenGivenValidTopic_thenShouldSaveTopic() throws Exception {
         String topicName = "Test create topic";
-        TopicDto topicDto = new TopicDto();
-        topicDto.setName(topicName);
+        TopicRequestDto topicRequestDto = new TopicRequestDto();
+        topicRequestDto.setName(topicName);
 
         mockMvc
                 .perform(
                         post("/api/v1/topics")
-                                .content(objectMapper.writeValueAsString(topicDto))
+                                .content(objectMapper.writeValueAsString(topicRequestDto))
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -108,18 +108,18 @@ class TopicControllerTests {
         topic.setUser(user);
         topicRepository.save(topic);
 
-        TopicDto topicDto = new TopicDto();
-        topicDto.setName("Updated topic name");
+        TopicRequestDto topicRequestDto = new TopicRequestDto();
+        topicRequestDto.setName("Updated topic name");
         mockMvc
                 .perform(
                         put("/api/v1/topics/" + topic.getId())
-                                .content(objectMapper.writeValueAsString(topicDto))
+                                .content(objectMapper.writeValueAsString(topicRequestDto))
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is(topicDto.getName())));
+                .andExpect(jsonPath("$.name", is(topicRequestDto.getName())));
     }
 
     @Test

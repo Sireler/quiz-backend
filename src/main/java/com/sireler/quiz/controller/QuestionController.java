@@ -1,6 +1,7 @@
 package com.sireler.quiz.controller;
 
-import com.sireler.quiz.dto.QuestionDto;
+import com.sireler.quiz.dto.QuestionRequestDto;
+import com.sireler.quiz.dto.QuestionResponseDto;
 import com.sireler.quiz.model.Question;
 import com.sireler.quiz.model.Topic;
 import com.sireler.quiz.service.QuestionService;
@@ -38,46 +39,46 @@ public class QuestionController {
     }
 
     @GetMapping
-    public List<QuestionDto> listQuestions(@PathVariable("topicId") Long topicId) {
+    public List<QuestionResponseDto> listQuestions(@PathVariable("topicId") Long topicId) {
         List<Question> questions = questionService.getQuestionsByTopicId(topicId);
-        List<QuestionDto> questionDtos = questions
+        List<QuestionResponseDto> response = questions
                 .stream()
-                .map(question -> modelMapper.map(question, QuestionDto.class))
+                .map(question -> modelMapper.map(question, QuestionResponseDto.class))
                 .collect(Collectors.toList());
 
-        return questionDtos;
+        return response;
     }
 
     @GetMapping("{id}")
-    public QuestionDto getQuestion(@PathVariable("id") Long id) {
+    public QuestionResponseDto getQuestion(@PathVariable("id") Long id) {
         Question question = questionService.getQuestion(id);
-        QuestionDto questionDto = modelMapper.map(question, QuestionDto.class);
+        QuestionResponseDto response = modelMapper.map(question, QuestionResponseDto.class);
 
-        return questionDto;
+        return response;
     }
 
     @PostMapping
-    public QuestionDto createQuestion(@Valid @RequestBody QuestionDto questionDto,
-                                      @PathVariable("topicId") Long topicId) {
+    public QuestionResponseDto createQuestion(@Valid @RequestBody QuestionRequestDto questionRequestDto,
+                                              @PathVariable("topicId") Long topicId) {
         Topic topic = topicService.getTopic(topicId);
-        Question question = modelMapper.map(questionDto, Question.class);
+        Question question = modelMapper.map(questionRequestDto, Question.class);
         question.setTopic(topic);
 
         Question createdQuestion = questionService.createQuestion(question);
-        QuestionDto createdQuestionDto = modelMapper.map(createdQuestion, QuestionDto.class);
+        QuestionResponseDto response = modelMapper.map(createdQuestion, QuestionResponseDto.class);
 
-        return createdQuestionDto;
+        return response;
     }
 
     @PutMapping("{id}")
-    public QuestionDto updateQuestion(@Valid @RequestBody QuestionDto questionDto,
-                                      @PathVariable("id") Long id) {
-        Question questionToUpdate = modelMapper.map(questionDto, Question.class);
+    public QuestionResponseDto updateQuestion(@Valid @RequestBody QuestionRequestDto questionRequestDto,
+                                              @PathVariable("id") Long id) {
+        Question questionToUpdate = modelMapper.map(questionRequestDto, Question.class);
 
         Question updatedQuestion = questionService.updateQuestion(questionToUpdate, id);
-        QuestionDto updatedQuestionDto = modelMapper.map(updatedQuestion, QuestionDto.class);
+        QuestionResponseDto response = modelMapper.map(updatedQuestion, QuestionResponseDto.class);
 
-        return updatedQuestionDto;
+        return response;
     }
 
     @DeleteMapping("{id}")

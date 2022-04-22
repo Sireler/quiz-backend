@@ -3,11 +3,9 @@ package com.sireler.quiz.dto;
 import lombok.Data;
 
 @Data
-public class AnswerDto {
+public class TopicResponseDto {
 
     private Long id;
 
-    private String body;
-
-    private boolean isCorrect;
+    private String name;
 }

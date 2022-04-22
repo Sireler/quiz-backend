@@ -2,14 +2,10 @@ package com.sireler.quiz.dto;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class QuestionDto {
+public class QuestionResponseDto {
 
     private Long id;
 
     private String body;
-
-    private List<AnswerDto> answers;
 }

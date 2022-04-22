@@ -1,14 +1,16 @@
 package com.sireler.quiz.dto;
 
+import com.sireler.quiz.model.Question;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import java.util.List;
 
 @Data
 public class TopicDto {
 
-    @NotBlank
-    @Size(min = 4, max = 255, message = "name must be between 4 and 255 characters")
+    private Long id;
+
     private String name;
+
+    private List<QuestionDto> questions;
 }

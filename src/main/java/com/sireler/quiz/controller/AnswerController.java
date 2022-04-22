@@ -1,6 +1,7 @@
 package com.sireler.quiz.controller;
 
-import com.sireler.quiz.dto.AnswerDto;
+import com.sireler.quiz.dto.AnswerRequestDto;
+import com.sireler.quiz.dto.AnswerResponseDto;
 import com.sireler.quiz.model.Answer;
 import com.sireler.quiz.model.Question;
 import com.sireler.quiz.service.AnswerService;
@@ -36,38 +37,38 @@ public class AnswerController {
     }
 
     @GetMapping
-    public List<AnswerDto> listAnswers(@PathVariable("questionId") Long questionId) {
+    public List<AnswerResponseDto> listAnswers(@PathVariable("questionId") Long questionId) {
         List<Answer> answers = answerService.getAnswersByQuestionId(questionId);
-        List<AnswerDto> answerDtos = answers
+        List<AnswerResponseDto> response = answers
                 .stream()
-                .map(answer -> modelMapper.map(answer, AnswerDto.class))
+                .map(answer -> modelMapper.map(answer, AnswerResponseDto.class))
                 .collect(Collectors.toList());
 
-        return answerDtos;
+        return response;
     }
 
     @PostMapping
-    public AnswerDto createAnswer(@Valid @RequestBody AnswerDto answerDto,
-                                  @PathVariable("questionId") Long questionId) {
+    public AnswerResponseDto createAnswer(@Valid @RequestBody AnswerRequestDto answerRequestDto,
+                                          @PathVariable("questionId") Long questionId) {
         Question question = questionService.getQuestion(questionId);
-        Answer answer = modelMapper.map(answerDto, Answer.class);
+        Answer answer = modelMapper.map(answerRequestDto, Answer.class);
         answer.setQuestion(question);
 
         Answer createdAnswer = answerService.createAnswer(answer);
-        AnswerDto createdAnswerDto = modelMapper.map(createdAnswer, AnswerDto.class);
+        AnswerResponseDto response = modelMapper.map(createdAnswer, AnswerResponseDto.class);
 
-        return createdAnswerDto;
+        return response;
     }
 
     @PutMapping("{id}")
-    public AnswerDto updateAnswer(@Valid @RequestBody AnswerDto answerDto,
-                                  @PathVariable("id") Long id) {
-        Answer answerToUpdate = modelMapper.map(answerDto, Answer.class);
+    public AnswerResponseDto updateAnswer(@Valid @RequestBody AnswerRequestDto answerRequestDto,
+                                          @PathVariable("id") Long id) {
+        Answer answerToUpdate = modelMapper.map(answerRequestDto, Answer.class);
 
         Answer updatedAnswer = answerService.updateAnswer(answerToUpdate, id);
-        AnswerDto updatedAnswerDto = modelMapper.map(updatedAnswer, AnswerDto.class);
+        AnswerResponseDto response = modelMapper.map(updatedAnswer, AnswerResponseDto.class);
 
-        return updatedAnswerDto;
+        return response;
     }
 
     @DeleteMapping("{id}")

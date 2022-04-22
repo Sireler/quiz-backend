@@ -1,6 +1,7 @@
 package com.sireler.quiz.controller;
 
-import com.sireler.quiz.dto.TopicDto;
+import com.sireler.quiz.dto.TopicRequestDto;
+import com.sireler.quiz.dto.TopicResponseDto;
 import com.sireler.quiz.model.Topic;
 import com.sireler.quiz.model.User;
 import com.sireler.quiz.security.JwtUserDetails;
@@ -38,35 +39,37 @@ public class TopicController {
     }
 
     @GetMapping("{id}")
-    public TopicDto getTopic(@PathVariable("id") Long id) {
+    public TopicResponseDto getTopic(@PathVariable("id") Long id) {
         Topic topic = topicService.getTopic(id);
-        TopicDto topicDto = modelMapper.map(topic, TopicDto.class);
+        TopicResponseDto response = modelMapper.map(topic, TopicResponseDto.class);
 
-        return topicDto;
+        return response;
     }
 
     @PostMapping
-    public TopicDto createTopic(@Valid @RequestBody TopicDto topicDto,
-                                @AuthenticationPrincipal JwtUserDetails jwtUser) {
+    public TopicResponseDto createTopic(@Valid @RequestBody TopicRequestDto topicRequestDto,
+                                        @AuthenticationPrincipal JwtUserDetails jwtUser) {
         User user = userService.findByUsername(jwtUser.getUsername());
-        Topic topic = modelMapper.map(topicDto, Topic.class);
+        Topic topic = modelMapper.map(topicRequestDto, Topic.class);
         topic.setUser(user);
 
         Topic createdTopic = topicService.createTopic(topic);
-        TopicDto createdTopicDto = modelMapper.map(createdTopic, TopicDto.class);
+        TopicResponseDto response =
+                modelMapper.map(createdTopic, TopicResponseDto.class);
 
-        return createdTopicDto;
+        return response;
     }
 
     @PutMapping("{id}")
-    public TopicDto updateTopic(@Valid @RequestBody TopicDto topicDto,
-                                @PathVariable("id") Long id) {
-        Topic topicToUpdate = modelMapper.map(topicDto, Topic.class);
+    public TopicResponseDto updateTopic(@Valid @RequestBody TopicRequestDto topicRequestDto,
+                                        @PathVariable("id") Long id) {
+        Topic topicToUpdate = modelMapper.map(topicRequestDto, Topic.class);
 
         Topic updatedTopic = topicService.updateTopic(topicToUpdate, id);
-        TopicDto updatedTopicDto = modelMapper.map(updatedTopic, TopicDto.class);
+        TopicResponseDto response =
+                modelMapper.map(updatedTopic, TopicResponseDto.class);
 
-        return updatedTopicDto;
+        return response;
     }
 
     @DeleteMapping("{id}")

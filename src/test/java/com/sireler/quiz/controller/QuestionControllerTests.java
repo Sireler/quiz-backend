@@ -1,7 +1,7 @@
 package com.sireler.quiz.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sireler.quiz.dto.QuestionDto;
+import com.sireler.quiz.dto.QuestionRequestDto;
 import com.sireler.quiz.model.Question;
 import com.sireler.quiz.model.Topic;
 import com.sireler.quiz.repository.QuestionRepository;
@@ -69,13 +69,13 @@ class QuestionControllerTests {
         topic.setName("Topic");
         topicRepository.save(topic);
 
-        QuestionDto questionDto = new QuestionDto();
-        questionDto.setBody("question 1");
+        QuestionRequestDto questionRequestDto = new QuestionRequestDto();
+        questionRequestDto.setBody("question 1");
 
         mockMvc
                 .perform(
                         post("/api/v1/topics/" + topic.getId() + "/questions")
-                                .content(objectMapper.writeValueAsString(questionDto))
+                                .content(objectMapper.writeValueAsString(questionRequestDto))
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -96,13 +96,13 @@ class QuestionControllerTests {
         question.setTopic(topic);
         questionRepository.save(question);
 
-        QuestionDto questionDto = new QuestionDto();
-        questionDto.setBody("New question body");
+        QuestionRequestDto questionRequestDto = new QuestionRequestDto();
+        questionRequestDto.setBody("New question body");
 
         mockMvc
                 .perform(
                         put("/api/v1/topics/" + topic.getId() + "/questions/" + question.getId())
-                                .content(objectMapper.writeValueAsString(questionDto))
+                                .content(objectMapper.writeValueAsString(questionRequestDto))
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )

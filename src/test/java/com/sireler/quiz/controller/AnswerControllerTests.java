@@ -1,7 +1,7 @@
 package com.sireler.quiz.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sireler.quiz.dto.AnswerDto;
+import com.sireler.quiz.dto.AnswerRequestDto;
 import com.sireler.quiz.model.Answer;
 import com.sireler.quiz.model.Question;
 import com.sireler.quiz.repository.AnswerRepository;
@@ -71,14 +71,14 @@ class AnswerControllerTests {
         question.setBody("question 1");
         questionRepository.save(question);
 
-        AnswerDto answerDto = new AnswerDto();
-        answerDto.setBody("answer 1");
-        answerDto.setCorrect(true);
+        AnswerRequestDto answerRequestDto = new AnswerRequestDto();
+        answerRequestDto.setBody("answer 1");
+        answerRequestDto.setCorrect(true);
 
         mockMvc
                 .perform(
                         post("/api/v1/questions/" + question.getId() + "/answers")
-                                .content(objectMapper.writeValueAsString(answerDto))
+                                .content(objectMapper.writeValueAsString(answerRequestDto))
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
@@ -100,14 +100,14 @@ class AnswerControllerTests {
         answer.setQuestion(question);
         answerRepository.save(answer);
 
-        AnswerDto answerDto = new AnswerDto();
-        answerDto.setBody("New answer body");
-        answerDto.setCorrect(true);
+        AnswerRequestDto answerRequestDto = new AnswerRequestDto();
+        answerRequestDto.setBody("New answer body");
+        answerRequestDto.setCorrect(true);
 
         mockMvc
                 .perform(
                         put("/api/v1/questions/" + question.getId() + "/answers/" + answer.getId())
-                                .content(objectMapper.writeValueAsString(answerDto))
+                                .content(objectMapper.writeValueAsString(answerRequestDto))
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 )
